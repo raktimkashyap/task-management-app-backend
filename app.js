@@ -6,7 +6,9 @@ const routes = require("./routes/index");
 require("dotenv").config();
 
 app.use(express.json());
-app.get("/", res.send("Task Management Application"));
+app.get("/", (req, res) => {
+  res.send("Task Management Application");
+});
 app.use("/api", routes);
 
 // MAIN
