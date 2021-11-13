@@ -12,6 +12,7 @@ const connectDB = (dbURL) => {
     })
     .catch((err) => {
       console.log("DATABASE CONNECTION ERROR:\n", err);
+      process.exit();
     });
 };
 
