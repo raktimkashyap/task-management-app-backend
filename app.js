@@ -3,9 +3,13 @@ const app = express();
 const port = process.env.PORT || 5000;
 const connectDB = require("./utils/db/dbConnection");
 const routes = require("./routes/index");
+const cors = require("cors");
+const { request } = require("express");
 require("dotenv").config();
 
+app.use(cors());
 app.use(express.json());
+
 app.get("/", (req, res) => {
   res.send("Task Management Application");
 });
