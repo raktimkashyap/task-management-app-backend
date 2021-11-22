@@ -12,24 +12,30 @@ exports.createTask = async (req, res) => {
     owner: req.user.email,
   })
     .then((task) => {
-      res
-        .status(200)
-        .json({ message: "task created successfully", task: task });
+      res.status(200).json({
+        success: true,
+        message: "task created successfully",
+        task: task,
+      });
     })
     .catch((err) => {
-      res
-        .status(400)
-        .json({ message: "Something went wrong", error: err.message });
+      res.status(400).json({
+        success: false,
+        message: "Something went wrong",
+        error: err.message,
+      });
     });
 };
 
 exports.getTasks = async (req, res) => {
   Task.find({ owner: req.user.email, projectId: null })
-    .then((tasks) => res.status(200).json({ tasks: tasks }))
+    .then((tasks) => res.status(200).json({ success: true, tasks: tasks }))
     .catch((err) => {
-      res
-        .status(400)
-        .json({ message: "something went wrong", error: err.message });
+      res.status(400).json({
+        success: false,
+        message: "something went wrong",
+        error: err.message,
+      });
     });
 };
 
@@ -37,12 +43,16 @@ exports.deleteTask = async (req, res) => {
   const taskId = req.params.taskId;
   Task.findByIdAndRemove({ _id: taskId })
     .then(() => {
-      res.status(200).json({ message: "task deleted successfully" });
+      res
+        .status(200)
+        .json({ success: true, message: "task deleted successfully" });
     })
     .catch((err) => {
-      res
-        .status(400)
-        .json({ message: "something went wrong", error: err.message });
+      res.status(400).json({
+        success: false,
+        message: "something went wrong",
+        error: err.message,
+      });
     });
 };
 
@@ -54,12 +64,16 @@ exports.updateTask = async (req, res) => {
     { title, description, dueDate, status, priority, projectId }
   )
     .then(() => {
-      res.status(200).json({ message: "task updated successfully" });
+      res
+        .status(200)
+        .json({ success: true, message: "task updated successfully" });
     })
     .catch((err) => {
-      res
-        .status(400)
-        .json({ message: "something went wrong", error: err.message });
+      res.status(400).json({
+        success: false,
+        message: "something went wrong",
+        error: err.message,
+      });
     });
 };
 
@@ -68,11 +82,13 @@ exports.getTasksByDueDate = async (req, res) => {
 
   Task.find({ owner: req.user.email, dueDate: dueDate })
     .then((tasks) => {
-      res.status(200).json({ tasks });
+      res.status(200).json({ success: true, tasks });
     })
     .catch((err) => {
-      res
-        .status(400)
-        .json({ message: "something went wrong", error: err.message });
+      res.status(400).json({
+        success: false,
+        message: "something went wrong",
+        error: err.message,
+      });
     });
 };

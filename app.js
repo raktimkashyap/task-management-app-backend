@@ -13,7 +13,7 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Task Management Application");
 });
-app.use("/api", routes);
+app.use("/api/v1", routes);
 
 // MAIN
 (async () => {

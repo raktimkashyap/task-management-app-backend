@@ -15,13 +15,15 @@ exports.signUp = async (req, res) => {
 
   const existingUser = await User.findOne({ email: email });
   if (existingUser) {
-    res.status(400).json({ message: "User Alreadt Exist" });
+    res.status(400).json({ success: false, message: "User Alreadt Exist" });
     return;
   }
 
   const hashedPassword = await bcrypt.hash(password, 10);
   if (!hashedPassword)
-    return res.status(500).json({ message: "Something went wrong" });
+    return res
+      .status(500)
+      .json({ success: false, message: "Something went wrong" });
 
   User.create({
     fullName: fullName,
@@ -37,10 +39,14 @@ exports.signUp = async (req, res) => {
       res
         .status(200)
         .header("auth-token", accessToken)
-        .json({ message: "Sign Up Successful", accessToken });
+        .json({ success: true, message: "Sign Up Successful", accessToken });
     })
     .catch((err) => {
-      res.status(400).json({ message: "Sign Up Failed", error: err.message });
+      res.status(400).json({
+        success: false,
+        message: "Sign Up Failed",
+        error: err.message,
+      });
     });
 };
 
@@ -54,14 +60,16 @@ exports.signIn = async (req, res) => {
   const { email, password } = req.body;
 
   const user = await User.findOne({ email: email });
-  if (!user) return res.status(400).json({ message: "User not found" });
+  if (!user)
+    return res.status(400).json({ success: false, message: "User not found" });
 
   try {
     const passwordMatched = await bcrypt.compare(password, user.password);
     if (!passwordMatched)
-      return res
-        .status(403)
-        .json({ message: "Authentication Failed, Password do not match" });
+      return res.status(403).json({
+        success: false,
+        message: "Authentication Failed, Password do not match",
+      });
 
     const userData = {
       email: user.email,
@@ -71,8 +79,12 @@ exports.signIn = async (req, res) => {
     res
       .status(200)
       .header("auth-token", accessToken)
-      .json({ message: "Sign in successful", accessToken });
+      .json({ success: true, message: "Sign in successful", accessToken });
   } catch (err) {
-    res.status(500).json({ message: "Something went wrong", err: err.message });
+    res.status(500).json({
+      success: false,
+      message: "Something went wrong",
+      err: err.message,
+    });
   }
 };
