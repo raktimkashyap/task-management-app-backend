@@ -7,7 +7,7 @@ exports.createTask = async (req, res) => {
     description,
     status,
     priority,
-    dueDate: new Date(),
+    dueDate,
     projectId,
     owner: req.user.email,
   })
