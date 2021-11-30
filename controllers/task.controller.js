@@ -7,7 +7,7 @@ exports.createTask = async (req, res) => {
     description,
     status,
     priority,
-    dueDate,
+    dueDate: new Date(dueDate).toLocaleDateString(),
     projectId,
     owner: req.user.email,
   })
@@ -61,7 +61,14 @@ exports.updateTask = async (req, res) => {
   const taskId = req.params.taskId;
   Task.findByIdAndUpdate(
     { _id: taskId },
-    { title, description, dueDate, status, priority, projectId }
+    {
+      title,
+      description,
+      dueDate: new Date(dueDate).toLocaleDateString(),
+      status,
+      priority,
+      projectId,
+    }
   )
     .then(() => {
       res
@@ -80,7 +87,10 @@ exports.updateTask = async (req, res) => {
 exports.getTasksByDueDate = async (req, res) => {
   const { dueDate } = req.params;
 
-  Task.find({ owner: req.user.email, dueDate: dueDate })
+  Task.find({
+    owner: req.user.email,
+    dueDate: new Date(dueDate).toLocaleDateString(),
+  })
     .then((tasks) => {
       res.status(200).json({ success: true, tasks });
     })
